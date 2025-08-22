@@ -17,21 +17,23 @@
 * **資料庫**: SQLite 3 (Python 標準函式庫)
 * **AI 模型運行**: [Ollama](https://ollama.com/)
 * **AI 模型**: `gemma:2b`
+* **開發環境**: Windows 11 24H2、Python 3.13.7
 
 ## 🚀 安裝與設定 (Installation & Setup)
 
 請依照以下步驟來設定並執行本專案：
 
 1.  **Clone 專案**
+打開目標目錄後在目錄下開啟終端機輸入以下指令:
     ```bash
     git clone [https://github.com/Leonard-9140/Recipe-AI-Manager.git](https://github.com/Leonard-9140/Recipe-AI-Manager.git)
     cd Recipe-AI-Manager
     ```
 
-2.  **安裝 Python**
-    請確保你的電腦已安裝 Python 3.10 或以上版本。(本專案使用python 3.13.7 windows版開發)
+2.  **安裝 Python** 
+    請確保你的電腦已安裝 Python 3.10 或以上版本。
 
-3.  **設定 Ollama**
+3.  **設定 Ollama** 
     * 前往 [Ollama 官網](https://ollama.com/) 下載並安裝。
     * 安裝完成後，執行以下指令來下載本專案使用的 AI 模型：
       ```bash
