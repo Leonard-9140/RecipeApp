@@ -24,7 +24,7 @@
 
 1.  **Clone 專案**
     ```bash
-    git clone [https://github.com/你的使用者名稱/Recipe-AI-Manager.git](https://github.com/你的使用者名稱/Recipe-AI-Manager.git)
+    git clone [https://github.com/Leonard-9140/Recipe-AI-Manager.git](https://github.com/Leonard-9140/Recipe-AI-Manager.git)
     cd Recipe-AI-Manager
     ```
 
