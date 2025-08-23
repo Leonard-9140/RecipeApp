@@ -1,13 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 import database
-import ollama
+# import ollama # 我們不再直接使用這個來建立 LLM 物件，LangChain會處理
 import threading
 from datetime import datetime, timedelta
 
 # --- 導入 LangChain 和 ChromaDB 相關模組 ---
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
+# --- 【修正第一處】導入 LangChain 提供的 Ollama 類別 ---
+from langchain_community.llms import Ollama
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
@@ -83,20 +85,11 @@ class App(tk.Tk):
         self.populate_treeview()
 
     def setup_rag_chain(self):
-        """
-        設定並回傳 LangChain 的 RAG 流程。
-        """
         try:
-            # 1. 初始化向量模型，用來將"查詢"轉換成向量
             embeddings = OllamaEmbeddings(model="gemma:2b")
-            
-            # 2. 載入本地已存在的 ChromaDB 資料庫
             vectorstore = Chroma(persist_directory=CHROMA_DB_PATH, embedding_function=embeddings)
-            
-            # 3. 建立一個檢索器，它能從資料庫中找出最相關的文件
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 5}) # 找出最相關的 5 份文件
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
-            # 4. 建立 RAG 的 Prompt 模板
             template = """
             你是一位專業的家常菜廚師。請嚴格根據我提供的【參考食譜】來回答問題。
             請整合參考食譜中的資訊，並根據使用者擁有的【現有食材】，設計一道料理的詳細食譜。
@@ -113,10 +106,9 @@ class App(tk.Tk):
             """
             prompt = PromptTemplate.from_template(template)
 
-            # 5. 初始化 LLM 模型
-            llm = ollama.Ollama(model="gemma:2b")
+            # --- 【修正第二處】使用從 langchain_community 導入的 Ollama 類別 ---
+            llm = Ollama(model="gemma:2b")
 
-            # 6. 使用 LangChain 表達式語言 (LCEL) 建立 RAG Chain
             rag_chain = (
                 {"context": retriever, "question": RunnablePassthrough()}
                 | prompt
@@ -130,11 +122,7 @@ class App(tk.Tk):
             messagebox.showerror("啟動錯誤", f"無法初始化 AI 功能模組。\n請確認 '{CHROMA_DB_PATH}' 資料庫已成功建立。\n錯誤訊息: {e}")
             return None
 
-    # --- generate_recipe 函式已完全重寫 ---
     def generate_recipe(self):
-        """
-        使用 RAG chain 來生成食譜。
-        """
         if not self.rag_chain:
             self.after(0, self.update_recipe_display, "AI 功能模組未成功初始化，無法生成食譜。")
             return
@@ -145,11 +133,7 @@ class App(tk.Tk):
                 self.after(0, self.update_recipe_display, "庫存是空的，請先新增一些食材！")
                 return
 
-            # 將食材列表格式化成一個簡單的字串，作為查詢條件
             question = "、".join([item[1] for item in ingredients_list])
-            
-            # --- 使用 RAG Chain 執行查詢 ---
-            # .invoke() 會自動完成 檢索->增強->生成 的所有步驟
             recipe_text = self.rag_chain.invoke(question)
             
             self.after(0, self.update_recipe_display, recipe_text)
