@@ -29,12 +29,12 @@
 
 1.  **Clone 專案**
     ```bash
-    git clone [https://github.com/你的使用者名稱/Recipe-AI-Manager.git](https://github.com/你的使用者名稱/Recipe-AI-Manager.git)
+    git clone [https://github.com/Leonard-9140/RecipeApp.git](https://github.com/Leonard-9140/RecipeApp.git)
     cd Recipe-AI-Manager
     ```
 
 2.  **安裝 Python**
-    請確保你的電腦已安裝 Python 3.10 或以上版本。
+    請確保你的電腦已安裝 Python 3.13 或以上版本。3.13以下版本或許可以運行，但不推薦。
 
 3.  **設定 Ollama**
     * 前往 [Ollama 官網](https://ollama.com/) 下載並安裝。
