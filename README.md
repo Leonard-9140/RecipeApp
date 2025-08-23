@@ -1,6 +1,6 @@
 # 🍲 AI食材庫存與食譜管家
 
-這是一個使用 Python Tkinter 開發的桌面應用程式，旨在幫助使用者管理家中的食材庫存，並利用在本機端運行的 AI 語言模型，根據現有食材提供食譜建議。
+這是一個使用 Python Tkinter 開發的桌面應用程式，旨在幫助使用者管理家中的食材庫存，並利用在本機端運行的 AI 語言模型，根據現有食材提供食譜建議。同時參考GitHub上[HowToCook](https://github.com/Anduin2017/HowToCook)專案中提供的中式料理食譜進行RAG based檢索生成功能。
 
 ## ✨ 功能特色
 
@@ -17,34 +17,60 @@
 * **資料庫**: SQLite 3 (Python 標準函式庫)
 * **AI 模型運行**: [Ollama](https://ollama.com/)
 * **AI 模型**: `gemma:2b`
+* **RAG 框架**: [LangChain](https://www.langchain.com/)
+* **向量資料庫**: [ChromaDB](https://www.trychroma.com/)
 * **開發環境**: Windows 11 24H2、Python 3.13.7
 
 ## 🚀 安裝與設定 (Installation & Setup)
 
-請依照以下步驟來設定並執行本專案：
+專案的設定分為**環境設定**和**知識庫建立**兩個階段。
+
+### 第一階段：環境設定
 
 1.  **Clone 專案**
-打開目標目錄後在目錄下開啟終端機輸入以下指令:
     ```bash
-    git clone [https://github.com/Leonard-9140/Recipe-AI-Manager.git](https://github.com/Leonard-9140/Recipe-AI-Manager.git)
+    git clone [https://github.com/你的使用者名稱/Recipe-AI-Manager.git](https://github.com/你的使用者名稱/Recipe-AI-Manager.git)
     cd Recipe-AI-Manager
     ```
 
-2.  **安裝 Python** 
+2.  **安裝 Python**
     請確保你的電腦已安裝 Python 3.10 或以上版本。
 
-3.  **設定 Ollama** 
+3.  **設定 Ollama**
     * 前往 [Ollama 官網](https://ollama.com/) 下載並安裝。
     * 安裝完成後，執行以下指令來下載本專案使用的 AI 模型：
-      ```bash
-      ollama pull gemma:2b
-      ```
+        ```bash
+        ollama pull gemma:2b
+        ```
 
-4.  **安裝 Python 依賴套件**
-    本專案使用 `ollama` Python 套件與 AI 模型溝通。
+4.  **安裝所有 Python 依賴套件**
+    在專案目錄下，執行以下指令來安裝所有必要的函式庫：
     ```bash
-    python -m pip install ollama
+    python -m pip install ollama langchain langchain-community langchain-text-splitters chromadb GitPython sentence-transformers unstructured markdown lxml
     ```
+
+### 第二階段：建立本地知識庫 (只需執行一次)
+
+在開始使用應用程式前，你需要先建立 AI 的大腦——食譜向量資料庫。
+
+1.  **下載線上食譜**
+    執行 `prepare_recipes.py` 腳本來自動下載食譜資料。
+    ```bash
+    python prepare_recipes.py
+    ```
+    完成後，專案目錄下會出現一個 `HowToCook_repo` 資料夾。
+
+2.  **建立向量資料庫**
+    * 首先，**啟動 Ollama 服務**。打開一個終端機視窗，輸入：
+        ```bash
+        ollama serve
+        ```
+    * 接著，**不要關閉上面的視窗**，打開**另一個**新的終端機視窗，在專案目錄下執行 `build_vector_db.py` 腳本。
+        ```bash
+        python build_vector_db.py
+        ```
+    * **注意**：這個過程會需要幾分鐘，它正在將數百份食譜進行向量化。請耐心等待直到它顯示完成訊息。完成後，專案目錄下會出現一個 `chroma_db` 資料夾。
+
 
 ## 📖 如何使用 (Usage)
 
